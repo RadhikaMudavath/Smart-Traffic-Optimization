@@ -1,0 +1,260 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 206 45% 97%;
+    --foreground: 220 36% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 12% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 12% 12%;
+
+    --primary: 212 92% 47%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 166 78% 36%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 204 35% 92%;
+    --muted-foreground: 214 16% 39%;
+
+    --accent: 190 64% 90%;
+    --accent-foreground: 222 28% 12%;
+
+    --destructive: 356 77% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 35 96% 56%;
+    --warning-foreground: 222 28% 12%;
+
+    --success: 151 72% 33%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 205 28% 84%;
+    --input: 205 28% 84%;
+    --ring: 212 92% 47%;
+
+    --radius: 1rem;
+
+    --traffic-free: 151 72% 33%;
+    --traffic-moderate: 35 96% 56%;
+    --traffic-heavy: 18 88% 55%;
+    --traffic-severe: 356 77% 48%;
+
+    --map-overlay: 198 28% 14% / 0.62;
+
+    --sidebar-background: 210 24% 97%;
+    --sidebar-foreground: 222 28% 12%;
+    --sidebar-primary: 212 92% 47%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 190 64% 90%;
+    --sidebar-accent-foreground: 222 28% 12%;
+    --sidebar-border: 214 18% 86%;
+    --sidebar-ring: 212 92% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image:
+      radial-gradient(circle at 15% 0%, hsl(212 92% 47% / 0.16), transparent 32%),
+      radial-gradient(circle at 90% 10%, hsl(166 78% 36% / 0.16), transparent 26%),
+      radial-gradient(circle at 70% 100%, hsl(35 96% 56% / 0.12), transparent 30%),
+      linear-gradient(180deg, hsl(204 50% 98%), hsl(var(--background)));
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Sora", "Manrope", sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .bottom-sheet {
+    @apply bg-card rounded-t-[1.75rem] shadow-xl;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.98), hsl(204 55% 98% / 0.98));
+    box-shadow: 0 -18px 44px hsl(220 36% 10% / 0.13);
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .floating-card {
+    @apply bg-card rounded-2xl;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.95), hsl(202 55% 98% / 0.92));
+    border: 1px solid hsl(0 0% 100% / 0.72);
+    box-shadow: 0 12px 30px hsl(220 36% 10% / 0.12);
+    backdrop-filter: blur(14px);
+  }
+
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  .map-control-btn {
+    @apply bg-card rounded-full shadow-lg touch-target transition-transform active:scale-95;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.96), hsl(202 55% 98% / 0.94));
+    border: 1px solid hsl(0 0% 100% / 0.74);
+    box-shadow: 0 10px 24px hsl(220 36% 10% / 0.14);
+    backdrop-filter: blur(14px);
+  }
+
+  .map-scrim {
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, hsl(215 35% 10% / 0.26), transparent 28%),
+      linear-gradient(0deg, hsl(215 35% 10% / 0.18), transparent 32%);
+  }
+
+  .stat-chip {
+    @apply rounded-xl border border-border bg-background/70 px-3 py-2;
+    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.6);
+  }
+
+  .premium-card {
+    background:
+      linear-gradient(135deg, hsl(212 92% 47% / 0.08), transparent 34%),
+      linear-gradient(180deg, hsl(0 0% 100% / 0.98), hsl(202 55% 98% / 0.98));
+    border: 1px solid hsl(0 0% 100% / 0.75);
+    box-shadow: 0 14px 34px hsl(220 36% 10% / 0.12);
+  }
+}
+
+/* Custom map marker and route styles */
+.user-marker-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #3b82f6, #1e40af);
+  border: 3px solid white;
+  box-shadow: 0 6px 18px rgba(30,64,175,0.28);
+  position: relative;
+}
+.user-marker-dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(66,133,244,0.16);
+  animation: pulse 2s infinite ease-out;
+}
+
+.dest-marker-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ef4444, #b91c1c);
+  border: 3px solid white;
+  box-shadow: 0 6px 18px rgba(185,28,28,0.18);
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9 }
+  70% { transform: translate(-50%, -50%) scale(1.4); opacity: 0 }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0 }
+}
+
+.route-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.route-line-shadow {
+  filter: drop-shadow(0 8px 18px rgba(15, 23, 42, 0.22));
+}
+
+.route-line-main {
+  filter: drop-shadow(0 3px 8px rgba(26, 115, 232, 0.24));
+}
+
+.route-line-alternate {
+  filter: drop-shadow(0 2px 6px rgba(31, 41, 55, 0.16));
+}
+
+/* Route card and primary button styles */
+.route-card {
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+.route-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(17,24,39,0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, hsl(212 92% 47%) 0%, hsl(166 78% 36%) 100%);
+  color: rgb(var(--primary-foreground));
+  box-shadow: 0 10px 26px hsl(212 92% 47% / 0.2);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.98);
+}
+
+/* Additional button styles */
+.btn-danger {
+  background: linear-gradient(90deg, hsl(357 88% 47%) 0%, hsl(360 74% 40%) 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(220,38,38,0.12);
+}
+.btn-danger:hover { filter: brightness(0.96); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+.btn-ghost:hover { background: rgba(0,0,0,0.03); }
+
+.btn-warning {
+  background: linear-gradient(90deg, hsl(37 92% 54%) 0%, hsl(34 95% 58%) 100%);
+  color: rgb(var(--warning-foreground));
+}
+
+/* Toaster tweaks to match palette */
+.toaster .toast {
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+}
+
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 0.5rem);
+  }
+}

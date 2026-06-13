@@ -1,0 +1,47 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import Index from "./pages/Index";
+import RoutePlanning from "./pages/RoutePlanning";
+import RouteResults from "./pages/RouteResults";
+import ActiveNavigation from "./pages/ActiveNavigation";
+import Auth from "./pages/Auth";
+import Favorites from "./pages/Favorites";
+import OfflineMaps from "./pages/OfflineMaps";
+import Profile from "./pages/Profile";
+import TrafficReports from "./pages/TrafficReports";
+import NotFound from "./pages/NotFound";
+import BottomNav from "./components/BottomNav";
+import { AuthProvider } from "./contexts/AuthContext";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/plan" element={<RoutePlanning />} />
+            <Route path="/results" element={<RouteResults />} />
+            <Route path="/navigate" element={<ActiveNavigation />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/offline" element={<OfflineMaps />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/traffic" element={<TrafficReports />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <BottomNav />
+        </BrowserRouter>
+      </AuthProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;
